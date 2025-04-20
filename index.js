@@ -1,36 +1,16 @@
 const express = require('express');
-require('dotenv').config();
 const database = require('./config/database');
+require('dotenv').config();
 
-const Task = require('./models/task.model');
-
-database.connect();
+const routesApiVer1 = require('./api/v1/routes/index.route');
 
 const app = express();
 const port = process.env.PORT;
 
-app.get('/tasks', async (req, res) => {
-  const tasks = await Task.find({
-    deleted: false
-  });
+database.connect();
 
-  res.json(tasks);
-});
-
-app.get('/tasks/detail/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-
-    const task = await Task.findOne({
-      _id: id,
-      deleted: false
-    });
-
-    res.json(task);
-  }catch(error){
-    res.json("Không tìm thấy");
-  }
-});
+// Routes Ver1
+routesApiVer1(app);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
