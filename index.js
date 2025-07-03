@@ -9,6 +9,9 @@ const port = process.env.PORT;
 
 database.connect();
 
+// Tương đương với body-parser.json()
+app.use(express.json());
+
 // Routes Ver1
 routesApiVer1(app);
 
