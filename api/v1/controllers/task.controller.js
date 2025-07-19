@@ -122,19 +122,39 @@ module.exports.changeMulti = async (req, res) => {
                 {
                     _id: {
                         $in: ids
-                    },
-                    deleted: false
+                    }
                 },
                 {
                     status: value
                 }
             )
+            res.json({
+                code: 200,
+                message: "Cập nhật trạng thái thành công"
+            });
+        }else if(key == "delete"){
+            await Task.updateMany(
+                {
+                    _id: {
+                        $in: ids
+                    }
+                },
+                {
+                    deleted: true,
+                    deletedAt: new Date()
+                }
+            )
+            res.json({
+                code: 200,
+                message: "Xóa thành công"
+            });
         }
-
-        res.json({
-            code: 200,
-            message: "Cập nhật trạng thái thành công"
-        });
+        else{
+            res.json({
+                code: 400,
+                message: "Không hỗ trợ thay đổi trường này"
+            });
+        }
         
     }catch (error) {
         res.json({
@@ -203,11 +223,11 @@ module.exports.delete = async (req, res) => {
 
         await Task.updateOne(
             {
-                _id: id,
-                deleted: false
+                _id: id
             },
             {
-                deleted: true
+                deleted: true,
+                deletedAt: new Date()
             }
         );
 
