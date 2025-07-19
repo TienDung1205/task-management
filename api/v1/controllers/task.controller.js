@@ -163,3 +163,63 @@ module.exports.create = async (req, res) => {
         });
     }
 }
+
+// [PATCH] /api/v1/tasks/edit/:id
+module.exports.edit = async (req, res) => {
+    try{
+        const id = req.params.id;
+
+        await Task.updateOne(
+            {
+                _id: id,
+                deleted: false
+            },
+            req.body
+        );
+
+        const record = await Task.findOne({
+            _id: id,
+            deleted: false
+        });
+
+        res.json({
+            code: 200,
+            message: "Cập nhật thành công",
+            record: record
+        });
+    }catch (error) {
+        res.json({
+            code: 400,
+            message: "Lỗi hệ thống",
+            error: error.message
+        });
+    }
+}
+
+// [DELETE] /api/v1/tasks/delete/:id
+module.exports.delete = async (req, res) => {
+    try{
+        const id = req.params.id;
+
+        await Task.updateOne(
+            {
+                _id: id,
+                deleted: false
+            },
+            {
+                deleted: true
+            }
+        );
+
+        res.json({
+            code: 200,
+            message: "Xóa thành công"
+        });
+    }catch (error) {
+        res.json({
+            code: 400,
+            message: "Lỗi hệ thống",
+            error: error.message
+        });
+    }
+}
