@@ -109,3 +109,38 @@ module.exports.changeStatus = async (req, res) => {
         });
     }
 }
+
+// [PATCH] /api/v1/tasks/change-multi
+module.exports.changeMulti = async (req, res) => {
+    try{
+        const ids = req.body.ids;
+        const key = req.body.key;
+        const value = req.body.value;
+
+        if(key == "status") {
+            await Task.updateMany(
+                {
+                    _id: {
+                        $in: ids
+                    },
+                    deleted: false
+                },
+                {
+                    status: value
+                }
+            )
+        }
+
+        res.json({
+            code: 200,
+            message: "Cập nhật trạng thái thành công"
+        });
+        
+    }catch (error) {
+        res.json({
+            code: 400,
+            message: "Lỗi hệ thống",
+            error: error.message
+        });
+    }
+}
